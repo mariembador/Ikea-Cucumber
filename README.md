@@ -2,6 +2,10 @@
 
 End-to-end UI test automation framework for IKEA Egypt using Selenium WebDriver, Cucumber (Gherkin), and TestNG. It follows a Page Object Model structure and runs on Microsoft Edge with an AdBlock extension to reduce flakiness from ads/popups.
 
+## Description
+
+This project automates key user journeys on the IKEA Egypt website using Selenium WebDriver with Cucumber (Gherkin) and TestNG. It follows the Page Object Model for maintainability, uses WebDriverManager for driver setup, and JavaFaker for realistic test data. Tests run on Microsoft Edge with an AdBlock extension to reduce popups and ad-related flakiness, and generate an HTML report at target/report.html.
+
 ## Tech stack
 
 - Java 23 (per `pom.xml`)
@@ -142,3 +146,4 @@ Examples from `register.feature`:
 ## License
 
 This project is provided as-is for learning and demonstration purposes.
+
