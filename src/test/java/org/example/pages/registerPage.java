@@ -22,7 +22,7 @@ public class registerPage {
     @FindBy(xpath = "//button[@data-testid=\"create-account\"]")
     public WebElement createAccountButton;
 
-    @FindBy(xpath = "//section[@class=\"grid_gridLeft__0Kzru\"]//h1")
+    @FindBy(xpath = "//section[@class=\"_gridLeft_zmmc1_151\"]//h1")
     public WebElement createAccountPageTitle;
 
     @FindBy(xpath = "//input[@id=\"first-name\"]")
@@ -36,6 +36,9 @@ public class registerPage {
 
     @FindBy(xpath = "//input[@id=\"password\"]")
     public WebElement password;
+
+    @FindBy(xpath = "//*[@id=\"close-button-1454703513202\"]/span")
+    public WebElement adCloseButton;
 
     @FindBy(xpath = "//input[@name=\"checkboxname\"]")
     public WebElement policyCheckbox;

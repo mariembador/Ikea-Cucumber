@@ -15,7 +15,7 @@ public class homePage {
     @FindBy(xpath = "//button[@id=\"onetrust-accept-btn-handler\"]")
     public WebElement cookiesButton;
 
-    @FindBy(xpath = "//h1[@class=\"pub__text pub__text--heading-m _title_oo8u2_122\"]")
+    @FindBy(xpath = "//h1[@class=\"pub__text pub__typography-heading-xl _title_185nw_73 _noBody_185nw_132 pub__typography-typescale-auto\"]")
     public WebElement homeTitle;
 
     @FindBy(xpath = "//div[@id=\"hnf-header-profile\"]")
