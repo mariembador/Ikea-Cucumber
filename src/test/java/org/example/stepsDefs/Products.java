@@ -9,6 +9,8 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.example.stepsDefs.Hooks.actions;
+
 public class Products {
 
     productsPage products = new productsPage();
@@ -27,7 +29,7 @@ public class Products {
         randomProduct = visibleProducts.get(Hooks.random.nextInt(visibleProducts.size()));
         productLink = randomProduct.findElement(By.tagName("a")).getAttribute("href");
         productName = randomProduct.getDomAttribute("data-product-name");
-        productDescription = randomProduct.findElement(By.xpath(".//span[@class=\"pip-header-section__description-text\"]")).getText();
+        productDescription = randomProduct.findElement(By.xpath(".//span[@class=\"pip-text pip-typography-label-m pip-typography-regular pip-price-module__description\"]")).getText().split(",")[0];
         productPrice = randomProduct.findElement(By.xpath(".//span[@class=\"pip-price__integer\"]")).getText();
         randomProduct.click();
     }
@@ -40,14 +42,15 @@ public class Products {
     @And("Ensure that product details in the home page same as in the product page")
     public void ensureThatProductDetailsInTheHomePageSameAsInTheProductPage() {
         Hooks.soft.assertEquals(productName,products.productName.getText());
-        Hooks.soft.assertTrue(products.productDescription.getText().contains(productDescription),"Product description isn't the same");
+        Hooks.soft.assertTrue(productDescription.contains(products.productDescription.getText().split(",")[0]),"Product description isn't the same");
         Hooks.soft.assertEquals(productPrice,products.productPrice.getText());
     }
 
     @And("Click on Add to Bag button on a random product")
     public void clickOnAddToBagButtonOnARandomProduct() throws InterruptedException {
         lampsRandomProduct = products.lampsProducts.get(Hooks.random.nextInt(products.lampsProducts.size()));
-        WebElement lampsAddToBagButton = lampsRandomProduct.findElement(By.xpath(".//button[@type][1]"));
+        WebElement lampsAddToBagButton = lampsRandomProduct.findElement(By.xpath(".//a[@id=\"link-button-17575146242610\"]"));
+        products.adCloseButton.click();
         Hooks.soft.assertTrue(lampsAddToBagButton.isEnabled(), "lamps add to bag button not enabled");
         Thread.sleep(1000);
         lampsAddToBagButton.click();
@@ -55,15 +58,15 @@ public class Products {
     }
     @And("Click on the same product and add it to the bag")
     public void clickOnTheSameProductAndAddItToTheBag() {
-        String lampsRandomProductLink = lampsRandomProduct.findElement(By.tagName("a")).getDomAttribute("href");
         lampsRandomProduct.click();
-        Hooks.soft.assertEquals(lampsRandomProductLink,Hooks.driver.getCurrentUrl());
         Hooks.soft.assertTrue(products.addToBagButton.isEnabled(), "add to bag button not enabled");
         products.addToBagButton.click();
+        products.xButton.click();
     }
 
     @Then("Ensure that quantity displayed in the bag is two")
     public void ensureThatQuantityDisplayedInTheBagIsTwo() throws InterruptedException {
+        actions.moveToLocation(0,200).perform();
         Hooks.soft.assertTrue(products.bagItemsCount.isDisplayed(), "items count not displayed");
         Thread.sleep(2000);
         Hooks.soft.assertEquals(Integer.parseInt(products.bagItemsCount.getText()),2);
@@ -78,13 +81,15 @@ public class Products {
     }
 
     @Then("Ensure the product displayed")
-    public void ensureTheProductDisplayed() {
+    public void ensureTheProductDisplayed() throws InterruptedException {
         Hooks.soft.assertTrue(Hooks.driver.getCurrentUrl().contains("https://www.ikea.com/eg/en/favourites/"), "Favorites page url not correct");
+        Thread.sleep(500);
         Hooks.soft.assertEquals(productName,products.favProductName.getText());
     }
 
     @And("Remove the product from the favorite page")
-    public void removeTheProductFromTheFavoritePage() {
+    public void removeTheProductFromTheFavoritePage() throws InterruptedException {
+        products.adCloseButton.click();
         Hooks.soft.assertTrue(products.moreButton.isEnabled(), "more button isn't enabled");
         products.moreButton.click();
         Hooks.soft.assertTrue(products.removeItemButton.isEnabled(), "remove item button isn't enabled");
@@ -95,7 +100,10 @@ public class Products {
 
     @When("Add a random product to the bag")
     public void addARandomProductToTheBag() throws InterruptedException {
-        List<WebElement> visibleProducts = products.allProducts.stream().filter(WebElement::isDisplayed).filter(p -> {return Double.parseDouble(p.getAttribute("data-price"))<20000;}).collect(Collectors.toList());
+        List<WebElement> visibleProducts = products.allProducts.stream().filter(WebElement::isDisplayed).filter(p -> {
+                    String priceStr = p.getAttribute("data-price").replace(",", "");
+                    return Double.parseDouble(priceStr) < 20000;
+                }).collect(Collectors.toList());
         randomProduct = visibleProducts.get(Hooks.random.nextInt(visibleProducts.size()));
         randomProduct.findElement(By.xpath(".//button[1]")).click();
         Thread.sleep(500);

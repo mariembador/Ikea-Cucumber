@@ -38,6 +38,8 @@ public class Register {
         register.email.sendKeys(email);
         Hooks.soft.assertEquals(register.email.getDomAttribute("value"), email);
         register.password.sendKeys(password);
+
+        register.adCloseButton.click();
         register.policyCheckbox.click();
         Hooks.soft.assertTrue(register.policyCheckbox.isSelected());
     }
